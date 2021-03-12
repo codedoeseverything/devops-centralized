@@ -1,0 +1,7 @@
+S3BucketNameCFN=devops-cfn-templates
+S3BucketNameKeyPair=devops-ec2-keypair
+S3Versioning=true
+S3NoncurrentVersionExpirationInDays=0
+S3ExpirationInDays=0
+
+
