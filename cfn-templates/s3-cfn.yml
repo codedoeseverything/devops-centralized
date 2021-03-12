@@ -148,8 +148,8 @@ Resources:
             Effect: Allow
             Resource: !Sub '${S3BucketName1.Arn}/*'
             Principal:
-              AWS: !Sub ${StagingAccountID}
-              # AWS: !Split [',',!Sub ${StagingAccountID} ]
+              # AWS: !Sub ${StagingAccountID}
+              AWS: !Split [',',!Ref StagingAccountID]
     
              
 
