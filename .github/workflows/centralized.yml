@@ -24,8 +24,8 @@ jobs:
       ENV : live # Valid values are sandbox,stage,live only
       STACK_NAME: centralized # Valid values are au,us,uk,p2,lf,nu,alpha,beta,centralized only
       SUBDOMAIN: devops-centralized
-      CFNS3BucketName: devops-cfn-templates1
-      S3BucketNameKeyPair: devops-ec2-keypair1
+      CFNS3BucketName: devops-cfn-templates123
+      S3BucketNameKeyPair: devops-ec2-keypair123
 
     # Steps to execute in this job
     steps:
