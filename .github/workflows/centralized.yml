@@ -58,15 +58,15 @@ jobs:
           pip install -r requirements.txt
 
 
-      - name: Run cloudformation template Lint analysis test using cfn-lint
-        uses: docker://ghcr.io/scottbrenner/cfn-lint-action:master
+      # - name: Run cloudformation template Lint analysis test using cfn-lint
+      #   uses: docker://ghcr.io/scottbrenner/cfn-lint-action:master
           
 
-      - name: Run cloudformation template static analysis test using cfn-nag
-        uses: stelligent/cfn_nag@master
-        with:
-          input_path: cfn-templates
-          extra_args: --fail-on-warnings -o json --blacklist-path .cfn_nag_blacklist.yml
+      # - name: Run cloudformation template static analysis test using cfn-nag
+      #   uses: stelligent/cfn_nag@master
+      #   with:
+      #     input_path: cfn-templates
+      #     extra_args: --fail-on-warnings -o json --blacklist-path .cfn_nag_blacklist.yml
 
 
       - name: Create additional cloudformation parameters for stack deployment

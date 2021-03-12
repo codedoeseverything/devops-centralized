@@ -1,109 +1,31 @@
 [
   {
-    "filename": "cfn-templates/bastion.yml",
+    "filename": "cfn-templates/s3-cfn.yml",
     "file_results": {
       "failure_count": 0,
       "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/route53-private.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/vpc-endpoints.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/route53-public.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/main.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/nat-gateway.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/nat-gateway-alarm.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/vpc.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/route53-legacy.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/security-group.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/sns-slack.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
-      ]
-    }
-  },
-  {
-    "filename": "cfn-templates/chatbot.yml",
-    "file_results": {
-      "failure_count": 0,
-      "violations": [
-
+        {
+          "id": "W51",
+          "type": "WARN",
+          "message": "S3 bucket should likely have a bucket policy",
+          "logical_resource_ids": [
+            "S3BucketName1"
+          ],
+          "line_numbers": [
+            83
+          ]
+        },
+        {
+          "id": "W35",
+          "type": "WARN",
+          "message": "S3 Bucket should have access logging configured",
+          "logical_resource_ids": [
+            "S3BucketName1"
+          ],
+          "line_numbers": [
+            83
+          ]
+        }
       ]
     }
   }
