@@ -119,7 +119,7 @@ jobs:
 
       - name: Create first S3 bucket to hold our CFN templates
         run: |
-          cat cfn-params.json
+          cat config/cfn-params.json
           # python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
 
