@@ -1,1 +1,4 @@
+S3Versioning=true
+S3NoncurrentVersionExpirationInDays=0
+S3ExpirationInDays=0
 

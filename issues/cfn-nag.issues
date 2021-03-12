@@ -4,30 +4,7 @@
     "file_results": {
       "failure_count": 0,
       "violations": [
-        {
-          "id": "W51",
-          "type": "WARN",
-          "message": "S3 bucket should likely have a bucket policy",
-          "logical_resource_ids": [
-            "S3BucketName2"
-          ],
-          "line_numbers": [
-            115
-          ]
-        },
-        {
-          "id": "W35",
-          "type": "WARN",
-          "message": "S3 Bucket should have access logging configured",
-          "logical_resource_ids": [
-            "S3BucketName1",
-            "S3BucketName2"
-          ],
-          "line_numbers": [
-            90,
-            115
-          ]
-        }
+
       ]
     }
   }

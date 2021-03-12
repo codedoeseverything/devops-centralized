@@ -26,7 +26,6 @@ jobs:
       SUBDOMAIN: devops-centralized
       CFNS3BucketName: devops-cfn-templates123
       CFNS3BucketNameKeyPair: devops-ec2-keypair123
-      SSMParamName: CFNCentralizedParam
 
     # Steps to execute in this job
     steps:
@@ -59,15 +58,15 @@ jobs:
           pip install -r requirements.txt
 
 
-      # - name: Run cloudformation template Lint analysis test using cfn-lint
-      #   uses: docker://ghcr.io/scottbrenner/cfn-lint-action:master
+      - name: Run cloudformation template Lint analysis test using cfn-lint
+        uses: docker://ghcr.io/scottbrenner/cfn-lint-action:master
           
 
-      # - name: Run cloudformation template static analysis test using cfn-nag
-      #   uses: stelligent/cfn_nag@master
-      #   with:
-      #     input_path: cfn-templates
-      #     extra_args: --fail-on-warnings -o json --blacklist-path .cfn_nag_blacklist.yml
+      - name: Run cloudformation template static analysis test using cfn-nag
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: cfn-templates
+          extra_args: --fail-on-warnings -o json --blacklist-path .cfn_nag_blacklist.yml
 
 
       - name: Create additional cloudformation parameters for stack deployment
@@ -77,10 +76,7 @@ jobs:
           Env=${{ env.ENV }}
           CFNS3BucketName=${{ env.CFNS3BucketName }}
           CFNS3BucketNameKeyPair=${{ env.CFNS3BucketNameKeyPair }}
-          S3Versioning=true
-          S3NoncurrentVersionExpirationInDays=0
-          S3ExpirationInDays=0
-          CFNS3BucketRegion= ap-southeast-2
+          CFNS3BucketRegion=${{ env.REGION }}
 
           EOF
    
@@ -106,7 +102,7 @@ jobs:
         run: |
           chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
         env:
-          SSM_VAR: ${{env.SSMParamName}}
+          SSM_VAR: ${{ env.STACK_NAME }}-param-${{ env.ENV }}
 
      
       - name: Convert JSON format cloudformation parameters and tags for stack deployment
@@ -117,7 +113,6 @@ jobs:
 
       - name: Create first S3 bucket to hold our CFN templates
         run: |
-          cat config/cfn-params.json
           python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
 

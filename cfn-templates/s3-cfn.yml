@@ -150,9 +150,6 @@ Resources:
             Principal:
               AWS: !Sub ${StagingAccountID}
              
-    
-             
-
   CFNS3BucketNameKeyPairPolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
