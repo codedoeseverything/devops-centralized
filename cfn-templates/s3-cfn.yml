@@ -91,7 +91,7 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName: !If [HasCFNS3BucketName, !Ref CFNS3BucketName, !Ref 'AWS::NoValue']
-      LifecycleConfiguration:StagingUser
+      LifecycleConfiguration:
         Rules:
         - AbortIncompleteMultipartUpload:
             DaysAfterInitiation: 7
@@ -115,7 +115,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       AccessControl: Private
-      BucketName: !If [HasCFNS3BucketName, !Ref HasCFNS3BucketNameKeyPair, !Ref 'AWS::NoValue']
+      BucketName: !If [HasCFNS3BucketNameKeyPair, !Ref CFNS3BucketNameKeyPair, !Ref 'AWS::NoValue']
       LifecycleConfiguration:
         Rules:
         - AbortIncompleteMultipartUpload:
@@ -135,7 +135,7 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
       
-  CFNS3BucketPolicy:
+  CFNS3BucketNamePolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
       Bucket: !Ref S3BucketName1
@@ -146,7 +146,7 @@ Resources:
             Effect: Allow
             Resource: !Sub '${S3BucketName1.Arn}'
             Principal:
-              AWS: !Ref StagingIAMUserArn
+              AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
           - Action:
             - 's3:*Object'
             - 's3:*ObjectAcl'
@@ -155,6 +155,25 @@ Resources:
             Principal:
               AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
 
+  CFNS3BucketNameKeyPairPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3BucketName2
+      PolicyDocument:
+        Statement:
+          - Action:
+            - 's3:ListBucket'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName2.Arn}'
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
+          - Action:
+            - 's3:*Object'
+            - 's3:*ObjectAcl'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName2.Arn}/*'
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
 
 Outputs:
   S3StackName:
@@ -165,4 +184,9 @@ Outputs:
     Value: !Ref S3BucketName1
     Export:
       Name: !Sub '${StackName}-CFNS3BucketName-${Env}'
+  S3BucketName2:
+    Description: 'Name of the S3BucketName2'
+    Value: !Ref S3BucketName1
+    Export:
+      Name: !Sub '${StackName}-CFNS3BucketNameKeyPair-${Env}'
   
