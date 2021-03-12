@@ -71,6 +71,7 @@ jobs:
 
 
       - name: Create additional cloudformation parameters for stack deployment
+        working-directory: .
         run: |
           chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
           cat >> config/cfn.params <<EOF 
