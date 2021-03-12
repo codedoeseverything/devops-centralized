@@ -97,12 +97,6 @@ jobs:
           Env=${{ env.ENV }}
           RootStack=${{ env.SUBDOMAIN }}
           EOF
-         
-
-      - name: Convert JSON format cloudformation parameters and tags for stack deployment
-        run: |
-          python3 scripts/cfn-param-json-convert.py config/cfn.params
-          python3 scripts/cfn-param-json-convert.py config/cfn.tags
 
 
       - name: Configure AWS credentials from ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
@@ -113,6 +107,21 @@ jobs:
           aws-region: ${{ env.REGION }}
 
       
+      - name: Create additional cloudformation parameters for stack deployment
+        # working-directory: .
+        run: |
+          chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
+          cat config/cfn.params
+        env:
+          SSM_VAR: ${{env.SSMParamName}}
+
+     
+      - name: Convert JSON format cloudformation parameters and tags for stack deployment
+        run: |
+          python3 scripts/cfn-param-json-convert.py config/cfn.params
+          python3 scripts/cfn-param-json-convert.py config/cfn.tags
+
+
       - name: Create first S3 bucket to hold our CFN templates
         run: |
           cat cfn-params.json
