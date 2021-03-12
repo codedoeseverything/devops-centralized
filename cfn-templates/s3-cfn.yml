@@ -123,6 +123,9 @@ Resources:
   #           Principal:
   #             AWS: !Ref StagingIAMUserArn
 
+# StagingIAMUserArn=arn:aws:iam::265383150857:user/stage-github-action,
+# CentralizedRootUser=arn:aws:iam::478532957254:root/
+
 Outputs:
   S3StackName:
     Description: 'Stack name'
