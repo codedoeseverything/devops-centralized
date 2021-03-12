@@ -153,7 +153,9 @@ Resources:
             Effect: Allow
             Resource: !Sub '${S3BucketName1.Arn}/*'
             Principal:
-              AWS: !Sub '${StagingAccountID}'
+              AWS: 
+              - !Sub ${StagingAccountID}
+              - !Sub arn:aws:iam::${StagingAccountID}:user/${StagingUser}
 
   # CFNS3BucketNameKeyPairPolicy:
   #   Type: 'AWS::S3::BucketPolicy'
