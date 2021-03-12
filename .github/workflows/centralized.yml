@@ -71,9 +71,7 @@ jobs:
 
 
       - name: Create additional cloudformation parameters for stack deployment
-        working-directory: .
         run: |
-          chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
           cat >> config/cfn.params <<EOF 
           StackName=${{ env.STACK_NAME }}
           Env=${{ env.ENV }}
@@ -85,10 +83,7 @@ jobs:
           CFNS3BucketRegion= ap-southeast-2
 
           EOF
-          cat cfn.params
-        env:
-          SSM_VAR: ${{env.SSMParamName}}
-
+   
       
       - name: Create additional cloudformation tags for stack deployment
         run: |
@@ -107,7 +102,7 @@ jobs:
           aws-region: ${{ env.REGION }}
 
       
-      - name: Create additional cloudformation parameters for stack deployment
+      - name: Create secret cloudformation parameters for stack deployment
         # working-directory: .
         run: |
           chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
