@@ -148,30 +148,30 @@ Resources:
             Effect: Allow
             Resource: !Sub '${S3BucketName1.Arn}/*'
             Principal:
-              # AWS: !Sub ${StagingAccountID}
-              AWS: !Split [',',!Ref StagingAccountID]
+              AWS: !Sub ${StagingAccountID}
+             
     
              
 
-  # CFNS3BucketNameKeyPairPolicy:
-  #   Type: 'AWS::S3::BucketPolicy'
-  #   Properties:
-  #     Bucket: !Ref S3BucketName2
-  #     PolicyDocument:
-  #       Statement:
-  #         - Action:
-  #           - 's3:ListBucket'
-  #           Effect: Allow
-  #           Resource: !Sub '${S3BucketName2.Arn}'
-  #           Principal:
-  #             AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
-  #         - Action:
-  #           - 's3:*Object'
-  #           - 's3:*ObjectAcl'
-  #           Effect: Allow
-  #           Resource: !Sub '${S3BucketName2.Arn}/*'
-  #           Principal:
-  #             AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
+  CFNS3BucketNameKeyPairPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3BucketName2
+      PolicyDocument:
+        Statement:
+          - Action:
+            - 's3:ListBucket'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName2.Arn}'
+            Principal:
+              AWS: !Sub ${StagingAccountID}
+          - Action:
+            - 's3:*Object'
+            - 's3:*ObjectAcl'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName2.Arn}/*'
+            Principal:
+              AWS: !Sub ${StagingAccountID}
 
 Outputs:
   S3StackName:
