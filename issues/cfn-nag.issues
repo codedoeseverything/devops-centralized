@@ -9,10 +9,10 @@
           "type": "WARN",
           "message": "S3 bucket should likely have a bucket policy",
           "logical_resource_ids": [
-            "S3BucketName1"
+            "S3BucketName2"
           ],
           "line_numbers": [
-            83
+            115
           ]
         },
         {
@@ -20,10 +20,12 @@
           "type": "WARN",
           "message": "S3 Bucket should have access logging configured",
           "logical_resource_ids": [
-            "S3BucketName1"
+            "S3BucketName1",
+            "S3BucketName2"
           ],
           "line_numbers": [
-            83
+            90,
+            115
           ]
         }
       ]
