@@ -70,11 +70,6 @@ Parameters:
     Type: String
     Default: ''
     NoEcho: true
-  StagingUser:
-    Description: 'Staging Github Action User ID'
-    Type: String
-    Default: ''
-    NoEcho: true
   
 Conditions:
   HasCFNS3BucketName: !Not [!Equals [!Ref CFNS3BucketName, '']]
@@ -153,9 +148,8 @@ Resources:
             Effect: Allow
             Resource: !Sub '${S3BucketName1.Arn}/*'
             Principal:
-              AWS: !Sub
-              - 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
-              # - !Sub ${StagingAccountID}
+              AWS: !Sub ${StagingAccountID}
+              # AWS: !Split [',',!Sub ${StagingAccountID} ]
     
              
 
