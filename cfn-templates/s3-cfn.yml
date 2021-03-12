@@ -135,25 +135,27 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
       
-  # CFNS3BucketNamePolicy:
-  #   Type: 'AWS::S3::BucketPolicy'
-  #   Properties:
-  #     Bucket: !Ref S3BucketName1
-  #     PolicyDocument:
-  #       Statement:
-  #         - Action:
-  #           - 's3:ListBucket'
-  #           Effect: Allow
-  #           Resource: !Sub '${S3BucketName1.Arn}'
-  #           Principal:
-  #             AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
-  #         - Action:
-  #           - 's3:*Object'
-  #           - 's3:*ObjectAcl'
-  #           Effect: Allow
-  #           Resource: !Sub '${S3BucketName1.Arn}/*'
-  #           Principal:
-  #             AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
+  CFNS3BucketNamePolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3BucketName1
+      PolicyDocument:
+        Statement:
+          - Action:
+            - 's3:ListBucket'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName1.Arn}'
+            Principal:
+              AWS: 
+              - !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
+          - Action:
+            - 's3:*Object'
+            - 's3:*ObjectAcl'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName1.Arn}/*'
+            Principal:
+              AWS: 
+              - !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
 
   # CFNS3BucketNameKeyPairPolicy:
   #   Type: 'AWS::S3::BucketPolicy'
