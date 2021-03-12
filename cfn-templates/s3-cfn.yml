@@ -155,8 +155,10 @@ Resources:
             Principal:
               AWS: 
               - !Sub ${StagingAccountID}
-              - "Fn::Join": [ "", [ "arn:aws:iam::", !Ref StagingAccountID, ":user/",!Ref StagingUser, ] ]
-              # - !Sub arn:aws:iam::${StagingAccountID}:user/${StagingUser}
+              - !Sub | 
+                arn:aws:iam::${StagingAccountID}:user/${StagingUser}
+              # - "Fn::Join": [ "", [ "arn:aws:iam::", !Ref StagingAccountID, ":user/",!Ref StagingUser, ] ]
+             
 
   # CFNS3BucketNameKeyPairPolicy:
   #   Type: 'AWS::S3::BucketPolicy'
