@@ -135,28 +135,26 @@ Resources:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
       
-  # CFNS3BucketPolicy:
-  #   Type: 'AWS::S3::BucketPolicy'
-  #   Properties:
-  #     Bucket: !Ref S3BucketName1
-  #     PolicyDocument:
-  #       Statement:
-  #         - Action:
-  #           - 's3:ListBucket'
-  #           Effect: Allow
-  #           Resource: !Sub '${S3BucketName1.Arn}'
-  #           Principal:
-  #             AWS: !Ref StagingIAMUserArn
-  #         - Action:
-  #           - 's3:*Object'
-  #           - 's3:*ObjectAcl'
-  #           Effect: Allow
-  #           Resource: !Sub '${S3BucketName1.Arn}/*'
-  #           Principal:
-  #             AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
+  CFNS3BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref S3BucketName1
+      PolicyDocument:
+        Statement:
+          - Action:
+            - 's3:ListBucket'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName1.Arn}'
+            Principal:
+              AWS: !Ref StagingIAMUserArn
+          - Action:
+            - 's3:*Object'
+            - 's3:*ObjectAcl'
+            Effect: Allow
+            Resource: !Sub '${S3BucketName1.Arn}/*'
+            Principal:
+              AWS: !Sub 'arn:aws:iam::${StagingAccountID}:user/${StagingUser}'
 
-# StagingIAMUserArn=arn:aws:iam::265383150857:user/stage-github-action,
-# CentralizedRootUser=arn:aws:iam::478532957254:root/
 
 Outputs:
   S3StackName:
