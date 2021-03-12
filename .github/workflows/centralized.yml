@@ -24,8 +24,8 @@ jobs:
       ENV : live # Valid values are sandbox,stage,live only
       STACK_NAME: shared # Valid values are au,us,uk,p2,lf,nu,alpha,beta,shared only
       SUBDOMAIN: devops-centralized
-      CFNS3BucketName: devops-cfn-templates123
-      CFNS3BucketNameKeyPair: devops-ec2-keypair123
+      CFNS3BucketName: devops-cfn-templates1
+      CFNS3BucketNameKeyPair: devops-ec2-keypair1
 
     # Steps to execute in this job
     steps:
@@ -76,7 +76,6 @@ jobs:
           Env=${{ env.ENV }}
           CFNS3BucketName=${{ env.CFNS3BucketName }}
           CFNS3BucketNameKeyPair=${{ env.CFNS3BucketNameKeyPair }}
-          CFNS3BucketRegion=${{ env.REGION }}
 
           EOF
    

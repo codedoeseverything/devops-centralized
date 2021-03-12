@@ -24,11 +24,6 @@ Parameters:
       It cannot start or end with a hyphen (-).
     Default: devops-cfn-templates
     Type: String
-  CFNS3BucketRegion:
-    Default: ap-southeast-2
-    Description: The AWS Region where the Cloudformation template stored in S3 bucket
-      is hosted. When using your own bucket, you must specify this value.
-    Type: String
   StackName:
     ConstraintDescription: This will be unique string to represent our stack.
     Default: shared
