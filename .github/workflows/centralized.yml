@@ -26,6 +26,7 @@ jobs:
       SUBDOMAIN: devops-centralized
       CFNS3BucketName: devops-cfn-templates123
       S3BucketNameKeyPair: devops-ec2-keypair123
+      SSMParamName: CFNCentralizedParam
 
     # Steps to execute in this job
     steps:
@@ -71,6 +72,7 @@ jobs:
 
       - name: Create additional cloudformation parameters for stack deployment
         run: |
+          chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
           cat >> config/cfn.params <<EOF 
           StackName=${{ env.STACK_NAME }}
           Env=${{ env.ENV }}
@@ -82,6 +84,9 @@ jobs:
           CFNS3BucketRegion= ap-southeast-2
 
           EOF
+          cat cfn.params
+        env:
+          SSM_VAR: ${{env.SSMParamName}}
 
       
       - name: Create additional cloudformation tags for stack deployment
@@ -109,7 +114,8 @@ jobs:
       
       - name: Create first S3 bucket to hold our CFN templates
         run: |
-          python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
+          cat cfn-params.json
+          # python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
 
       - name: AWS S3 Sync operation
