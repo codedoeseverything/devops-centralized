@@ -110,7 +110,7 @@ jobs:
           python3 scripts/cfn-param-json-convert.py config/cfn.tags
 
 
-      - name: Create first S3 bucket to hold our CFN templates
+      - name: Create or Update cloudformation templates from ${{ env.STACK_NAME }} AWS account in ${{ env.REGION }} region
         run: |
           python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
