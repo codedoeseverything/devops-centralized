@@ -1,9 +1,12 @@
-# GitHub Actions WorkFlow Name
-
+################################################
+#  GITHUB ACTION WORKFLOW NAME
+################################################
 name: Release to Centralized AWS environment
 
-#Event Trigger for this Workflow
 
+################################################
+#  GITHUB ACTION EVENT TRIGGER
+################################################
 on:
   workflow_dispatch:
   push:
@@ -11,14 +14,18 @@ on:
     branches: [ 'develop' ]
     
 
-#Jobs to perform based on event occurred
- 
+################################################
+#  GITHUB ACTION JOBS
+################################################
 jobs:
   centralized:
     name: centralized
     runs-on: ubuntu-latest
 
-    #Global Env variables declare here
+
+################################################
+#  GITHUB ACTIONS GLOBAL ENV VARIABLES  
+################################################
     env:
       REGION : ap-southeast-2
       ENV : live # Valid values are sandbox,stage,live only
@@ -26,20 +33,30 @@ jobs:
       SUBDOMAIN: devops-centralized
       CFNS3BucketName: devops-cfn-templates1
       PRIVATES3BucketName: devops-private1
+      RUNSECRETJOB: false
 
-    # Steps to execute in this job
+
+################################################
+#  GITHUB REPO CHECKOUT 
+################################################
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
 
+################################################
+#  PYTHON ENV  
+################################################
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
-          
+
+################################################
+#  PYTHON MODULES CACHE  
+################################################
       - name: Cache Python dependencies
         uses: actions/cache@v2
         id: cache-python
@@ -51,6 +68,9 @@ jobs:
             ${{ runner.os }}-
 
 
+################################################
+#  PYTHON MODULES INSTALL  
+################################################
       - name: Install Python dependencies
         if: steps.cache-python.outputs.cache-hit != 'true'
         run: |
@@ -58,10 +78,16 @@ jobs:
           pip install -r requirements.txt
 
 
+################################################
+#  CLOUDFORMATION LINT ANALYSIS TEST 
+################################################
       - name: Run cloudformation template Lint analysis test using cfn-lint
         uses: docker://ghcr.io/scottbrenner/cfn-lint-action:master
           
 
+################################################
+#  CLOUDFORMATION STATIC ANALYSIS TEST  
+################################################
       - name: Run cloudformation template static analysis test using cfn-nag
         uses: stelligent/cfn_nag@master
         with:
@@ -69,17 +95,20 @@ jobs:
           extra_args: --fail-on-warnings -o json --blacklist-path .cfn_nag_blacklist.yml
 
 
-      - name: Create additional cloudformation parameters for stack deployment
-        run: |
-          cat >> config/cfn.params <<EOF 
-          StackName=${{ env.STACK_NAME }}
-          Env=${{ env.ENV }}
-          CFNS3BucketName=${{ env.CFNS3BucketName }}
-          PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
-
-          EOF
+################################################
+#  AWS CLI CONFIGURATION  
+################################################ 
+      - name: Configure AWS credentials from ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.DEVOPS_AWS_KEY }}
+          aws-secret-access-key: ${{ secrets.DEVOPS_SECRET_KEY }}
+          aws-region: ${{ env.REGION }}
    
-      
+
+####################################################
+#  CLOUDFORMATION ADDITIONAL TAG; KEY=VALUE FORMAT
+#################################################### 
       - name: Create additional cloudformation tags for stack deployment
         run: |
           cat >> config/cfn.tags <<EOF 
@@ -89,23 +118,21 @@ jobs:
           EOF
 
 
-      - name: Configure AWS credentials from ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.DEVOPS_AWS_KEY }}
-          aws-secret-access-key: ${{ secrets.DEVOPS_SECRET_KEY }}
-          aws-region: ${{ env.REGION }}
-
-
+################################################
+#  CLOUDFORMATION ADDITIONAL TAG FORMATTING
+################################################ 
       - name: Convert JSON format cloudformation tags for stack deployment
         run: |
           python3 scripts/cfn-param-json-convert.py config/cfn.tags
 
-      
+
+################################################
+#  AWS SECRET VARIABLE CREATION OR UPDATION
+################################################ 
       - name: Create or Update AWS Secret Variables for ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
+        if: env.RUNSECRETJOB == 'true'
         run: |
-          chmod +x scripts/cfn-create-update-secret.sh && scripts/cfn-create-update-secret.sh
-          echo "Here is secret variable ARN" && cat .env
+          chmod +x scripts/cfn-secrets.sh && scripts/cfn-secrets.sh
         env:
           S3SECRETBUCKET: ${{ env.PRIVATES3BucketName }}
           STACKNAME: ${{ env.STACK_NAME }}
@@ -113,31 +140,48 @@ jobs:
           REGION: ${{ env.REGION }}
           TAGFILENAME: config/cfn-tags.json
 
-      
-      - name: Create secret cloudformation parameters for stack deployment
+
+#############################################################################
+#  CLOUDFORMATION ADDITIONAL PARAMETERS (SECRETS INCLUDED); KEY=VALUE FORMAT
+#############################################################################
+      - name: Create additional cloudformation parameters for stack deployment
         run: |
-          chmod +x scripts/cfn-secret-retrieve.sh && scripts/cfn-secret-retrieve.sh
-          cat config/cfn.params
-        env:
-          SECRET_VAR: ${{ env.STACK_NAME }}-AccountID-${{ env.ENV }}
-          CFN_PARAM1: StagingAccountID
+          cat >> config/cfn.params <<EOF 
+          StackName=${{ env.STACK_NAME }}
+          Env=${{ env.ENV }}
+          CFNS3BucketName=${{ env.CFNS3BucketName }}
+          PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
+          StagingAccountID=$(aws secretsmanager get-secret-value --secret-id ${{ env.STACK_NAME }}-AccountID-${{ env.ENV }}| jq --raw-output '.SecretString' | jq -r .StagingAccountID)
+          EOF
 
 
+##########################################################
+#  CLOUDFORMATION ADDITIONAL PARAMETERS FORMATTING
+########################################################## 
       - name: Convert JSON format cloudformation parameters for stack deployment
         run: |
           python3 scripts/cfn-param-json-convert.py config/cfn.params
 
 
+##########################################################
+#  CLOUDFORMATION DEPLOYMENT
+########################################################## 
       - name: Create or Update cloudformation templates from ${{ env.STACK_NAME }} AWS account in ${{ env.REGION }} region
         run: |
           python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
 
+##########################################################
+#  AWS S3 SYNC - CLOUDFORMATION TEMPLATES 
+##########################################################
       - name: AWS S3 Sync operation
         run: |
           aws s3 sync cfn-templates/ s3://${{env.CFNS3BucketName}}/${{env.STACK_NAME}}/${{env.REGION}}/cfn-templates --delete
 
-       
+
+##########################################################
+#  SLACK NOTIFICATION
+##########################################################       
       - name: Slack Notification
         if: always() # Pick up events even if the job fails or is canceled.
         uses: 8398a7/action-slack@v3
