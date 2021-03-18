@@ -2,7 +2,7 @@
 
 
 rm -rf temp; mkdir -p temp 1> /dev/null
-aws s3 sync s3://$S3SECRETBUCKET/$STACKNAME/$REGION/secrets/ temp/ --delete
+aws s3 sync s3://$PRIVATES3BucketName/$STACKNAME/$REGION/secrets/ temp/ --delete
 S3KEYNAME=$(ls -l temp| awk '{print $9}')
 
 
