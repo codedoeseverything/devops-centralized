@@ -33,7 +33,7 @@ jobs:
       SUBDOMAIN: devops-centralized
       CFNS3BucketName: devops-cfn-templates1
       PRIVATES3BucketName: devops-private1
-      RUNSECRETJOB: false
+      RUNSECRETJOB: ${{ env.SUBDOMAIN}}-${{ env.STACK_NAME}} #false
 
 
 ################################################
@@ -133,12 +133,6 @@ jobs:
         if: env.RUNSECRETJOB == 'true'
         run: |
           chmod +x scripts/cfn-secrets.sh && scripts/cfn-secrets.sh
-        env:
-          S3SECRETBUCKET: ${{ env.PRIVATES3BucketName }}
-          STACKNAME: ${{ env.STACK_NAME }}
-          ENV: ${{ env.ENV }}
-          REGION: ${{ env.REGION }}
-          TAGFILENAME: config/cfn-tags.json
 
 
 #############################################################################
@@ -168,7 +162,7 @@ jobs:
 ########################################################## 
       - name: Create or Update cloudformation templates from ${{ env.STACK_NAME }} AWS account in ${{ env.REGION }} region
         run: |
-          python3 scripts/cfn-create-update.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
+          python3 scripts/cfn-deploy.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
 
 ##########################################################

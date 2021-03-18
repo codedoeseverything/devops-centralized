@@ -24,7 +24,7 @@ for i in $S3KEYNAME ; do
         --output text)>>secret.param
         $(aws secretsmanager tag-resource \
         --secret-id $SECRETNAME \
-        --tags file://$TAGFILENAME \
+        --tags file://config/cfn-tags.json \
         --output text) 1> /dev/null
     else
         echo "updating existing secret for variable name "$SECRETNAME
