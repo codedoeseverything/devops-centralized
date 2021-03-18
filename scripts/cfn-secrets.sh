@@ -5,6 +5,8 @@ rm -rf temp; mkdir -p temp 1> /dev/null
 aws s3 sync s3://$PRIVATES3BucketName/$STACKNAME/$REGION/secrets/ temp/ --delete
 S3KEYNAME=$(ls -l temp| awk '{print $9}')
 
+echo "heloooooooooooooooooooooooooooo"
+echo $S3KEYNAME
 
 for i in $S3KEYNAME ; do
   SECRETPREFIX=$(echo "$i" | cut -f 1 -d '.')
