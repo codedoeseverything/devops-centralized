@@ -4,4 +4,5 @@ $CFN_PARAM1=$(aws secretsmanager get-secret-value --secret-id $SECRET_VAR| jq --
 
 cat >>config/cfn.params <<EOF 
 $CFN_PARAM1
+
 EOF
