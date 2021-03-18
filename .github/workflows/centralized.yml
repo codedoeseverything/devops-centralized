@@ -34,6 +34,7 @@ jobs:
       CFNS3BucketName: devops-cfn-templates1
       PRIVATES3BucketName: devops-private1
       RUNSECRETJOB: true #false
+      TEST: $STACK_NAME-$REGION
 
 
 ################################################
@@ -132,6 +133,8 @@ jobs:
       - name: Create or Update AWS Secret Variables for ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
         if: env.RUNSECRETJOB == 'true'
         run: |
+          echo "testing variable" 
+          echo ${{ env.TEST }}
           chmod +x scripts/cfn-secrets.sh && scripts/cfn-secrets.sh
 
 
