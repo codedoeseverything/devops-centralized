@@ -96,6 +96,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.DEVOPS_SECRET_KEY }}
           aws-region: ${{ env.REGION }}
 
+
+      - name: Convert JSON format cloudformation parameters and tags for stack deployment
+        run: |
+          python3 scripts/cfn-param-json-convert.py config/cfn.params
+          python3 scripts/cfn-param-json-convert.py config/cfn.tags
+          
       
       - name: Create or Update AWS Secret Variables for ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
         run: |
@@ -115,13 +121,6 @@ jobs:
         env:
           SECRET_VAR: ${{ env.STACK_NAME }}-AccountID-${{ env.ENV }}
           CFN_PARAM1: StagingAccountID
-
-
-     
-      - name: Convert JSON format cloudformation parameters and tags for stack deployment
-        run: |
-          python3 scripts/cfn-param-json-convert.py config/cfn.params
-          python3 scripts/cfn-param-json-convert.py config/cfn.tags
 
 
       - name: Create or Update cloudformation templates from ${{ env.STACK_NAME }} AWS account in ${{ env.REGION }} region
