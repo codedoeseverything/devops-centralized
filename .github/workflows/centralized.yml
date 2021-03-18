@@ -33,7 +33,7 @@ jobs:
       SUBDOMAIN: devops-centralized
       CFNS3BucketName: devops-cfn-templates1
       PRIVATES3BucketName: devops-private1
-      RUNSECRETJOB: ${{ env.SUBDOMAIN}}-${{ env.STACK_NAME}} #false
+      RUNSECRETJOB: $SUBDOMAIN-$STACK_NAME  #false
 
 
 ################################################
