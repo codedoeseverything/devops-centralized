@@ -76,7 +76,7 @@ jobs:
           Env=${{ env.ENV }}
           CFNS3BucketName=${{ env.CFNS3BucketName }}
           PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
-          StagingAccountID=42423423424
+          StagingAccountID=121943667802
           
           EOF
    
