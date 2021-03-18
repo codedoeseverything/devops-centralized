@@ -18,7 +18,7 @@ Parameters:
       It cannot start or end with a hyphen (-).
     Default: devops-cfn-templates
     Type: String
-  CFNS3BucketNameKeyPair:
+  PRIVATES3BucketName:
     Description: S3 bucket name for the Cloudformation template stored. This string
       can include numbers, lowercase letters, uppercase letters, and hyphens (-).
       It cannot start or end with a hyphen (-).
@@ -68,7 +68,7 @@ Parameters:
   
 Conditions:
   HasCFNS3BucketName: !Not [!Equals [!Ref CFNS3BucketName, '']]
-  HasCFNS3BucketNameKeyPair: !Not [!Equals [!Ref CFNS3BucketNameKeyPair, '']]
+  HasPRIVATES3BucketName: !Not [!Equals [!Ref PRIVATES3BucketName, '']]
   HasVersioning: !Equals [!Ref S3Versioning, true]
   HadVersioning: !Equals [!Ref S3Versioning, 'false-but-was-true']
   HasNoncurrentVersionExpirationInDays: !Not [!Equals [!Ref S3NoncurrentVersionExpirationInDays, 0]]
@@ -105,7 +105,7 @@ Resources:
     Type: 'AWS::S3::Bucket'
     Properties:
       AccessControl: Private
-      BucketName: !If [HasCFNS3BucketNameKeyPair, !Ref CFNS3BucketNameKeyPair, !Ref 'AWS::NoValue']
+      BucketName: !If [HasPRIVATES3BucketName, !Ref PRIVATES3BucketName, !Ref 'AWS::NoValue']
       LifecycleConfiguration:
         Rules:
         - AbortIncompleteMultipartUpload:
@@ -145,7 +145,7 @@ Resources:
             Principal:
               AWS: !Sub ${StagingAccountID}
              
-  CFNS3BucketNameKeyPairPolicy:
+  PRIVATES3BucketNamePolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
       Bucket: !Ref S3BucketName2
@@ -178,5 +178,5 @@ Outputs:
     Description: 'Name of the S3BucketName2'
     Value: !Ref S3BucketName1
     Export:
-      Name: !Sub '${StackName}-CFNS3BucketNameKeyPair-${Env}'
+      Name: !Sub '${StackName}-PRIVATES3BucketName-${Env}'
   

@@ -25,7 +25,7 @@ jobs:
       STACK_NAME: shared # Valid values are au,us,uk,p2,lf,nu,alpha,beta,shared only
       SUBDOMAIN: devops-centralized
       CFNS3BucketName: devops-cfn-templates1
-      CFNS3BucketNameKeyPair: devops-ec2-keypair1
+      PRIVATES3BucketName: devops-private1
 
     # Steps to execute in this job
     steps:
@@ -75,7 +75,7 @@ jobs:
           StackName=${{ env.STACK_NAME }}
           Env=${{ env.ENV }}
           CFNS3BucketName=${{ env.CFNS3BucketName }}
-          CFNS3BucketNameKeyPair=${{ env.CFNS3BucketNameKeyPair }}
+          PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
 
           EOF
    
@@ -99,9 +99,11 @@ jobs:
       
       - name: Create secret cloudformation parameters for stack deployment
         run: |
-          chmod +x scripts/cfn-ssm-retrieve.sh && scripts/cfn-ssm-retrieve.sh
+          chmod +x scripts/cfn-secret-retrieve.sh && scripts/cfn-secret-retrieve.sh
         env:
-          SSM_VAR: ${{ env.STACK_NAME }}-param-${{ env.ENV }}
+          SECRET_VAR: ${{ env.STACK_NAME }}-AWSAccountID-${{ env.ENV }}
+          CFN_PARAM1: StagingAccountID
+
 
      
       - name: Convert JSON format cloudformation parameters and tags for stack deployment
@@ -117,7 +119,7 @@ jobs:
 
       - name: AWS S3 Sync operation
         run: |
-          aws s3 sync cfn-templates/ s3://${{env.CFNS3BucketName}}/${{env.STACK_NAME}}/cfn-templates --delete
+          aws s3 sync cfn-templates/ s3://${{env.CFNS3BucketName}}/${{env.STACK_NAME}}/${{env.REGION}}/cfn-templates --delete
 
        
       - name: Slack Notification
