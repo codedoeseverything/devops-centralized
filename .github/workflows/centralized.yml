@@ -141,7 +141,7 @@ jobs:
       - name: Create additional cloudformation parameters for stack deployment
         run: |
           cat >> config/cfn.params <<EOF 
-          StackName=${{ env.STACK_NAME }}
+          StackName=$STACK_NAME
           Env=${{ env.ENV }}
           CFNS3BucketName=${{ env.CFNS3BucketName }}
           PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
