@@ -112,9 +112,9 @@ jobs:
       - name: Create additional cloudformation tags for stack deployment
         run: |
           cat >> config/cfn.tags <<EOF 
-          StackName=${{ env.STACK_NAME }}
-          Env=${{ env.ENV }}
-          RootStack=${{ env.SUBDOMAIN }}
+          StackName=$STACK_NAME
+          Env=$ENV
+          RootStack=$SUBDOMAIN
           EOF
 
 
@@ -142,10 +142,10 @@ jobs:
         run: |
           cat >> config/cfn.params <<EOF 
           StackName=$STACK_NAME
-          Env=${{ env.ENV }}
-          CFNS3BucketName=${{ env.CFNS3BucketName }}
-          PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
-          StagingAccountID=$(aws secretsmanager get-secret-value --secret-id ${{ env.STACK_NAME }}-AccountID-${{ env.ENV }}| jq --raw-output '.SecretString' | jq -r .StagingAccountID)
+          Env=$ENV
+          CFNS3BucketName=$CFNS3BucketName
+          PRIVATES3BucketName=$PRIVATES3BucketName
+          StagingAccountID=$(aws secretsmanager get-secret-value --secret-id $STACK_NAME-AccountID-$ENV | jq --raw-output '.SecretString' | jq -r .StagingAccountID)
           EOF
 
 
