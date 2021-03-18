@@ -115,7 +115,6 @@ jobs:
           StackName=$STACK_NAME
           Env=$ENV
           RootStack=$SUBDOMAIN
-          TEST=$SUBDOMAIN
           EOF
 
 
@@ -130,7 +129,7 @@ jobs:
 ################################################
 #  AWS SECRET VARIABLE CREATION OR UPDATION
 ################################################ 
-      - name: Create or Update AWS Secret Variables for ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
+      - name: Create or Update AWS Secret Variables for $STACK_NAME account in $REGION region
         if: env.RUNSECRETJOB == 'true'
         run: |
           chmod +x scripts/cfn-secrets.sh && scripts/cfn-secrets.sh
@@ -163,7 +162,7 @@ jobs:
 ########################################################## 
       - name: Create or Update cloudformation templates from ${{ env.STACK_NAME }} AWS account in ${{ env.REGION }} region
         run: |
-          python3 scripts/cfn-deploy.py ${{ env.STACK_NAME }}-${{ env.SUBDOMAIN }}-${{ env.ENV }} cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
+          python3 scripts/cfn-deploy.py $STACK_NAME-$SUBDOMAIN-$ENV cfn-templates/s3-cfn.yml config/cfn-params.json config/cfn-tags.json
 
 
 ##########################################################
@@ -171,7 +170,7 @@ jobs:
 ##########################################################
       - name: AWS S3 Sync operation
         run: |
-          aws s3 sync cfn-templates/ s3://${{env.CFNS3BucketName}}/${{env.STACK_NAME}}/${{env.REGION}}/cfn-templates --delete
+          aws s3 sync cfn-templates/ s3://$CFNS3BucketName/$STACK_NAME/$REGION/cfn-templates --delete
 
 
 ##########################################################
