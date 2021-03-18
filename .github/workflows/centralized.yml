@@ -76,8 +76,7 @@ jobs:
           Env=${{ env.ENV }}
           CFNS3BucketName=${{ env.CFNS3BucketName }}
           PRIVATES3BucketName=${{ env.PRIVATES3BucketName }}
-          StagingAccountID=121943667802
-          
+
           EOF
    
       
@@ -98,24 +97,24 @@ jobs:
           aws-region: ${{ env.REGION }}
 
       
-      # - name: Create or Update AWS Secret Variables for ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
-      #   run: |
-      #     chmod +x scripts/cfn-create-update-secret.sh && scripts/cfn-create-update-secret.sh
-      #     echo "Here is secret variable ARN" && cat .env
-      #   env:
-      #     S3SECRETBUCKET: ${{ env.PRIVATES3BucketName }}
-      #     STACKNAME: ${{ env.STACK_NAME }}
-      #     ENV: ${{ env.ENV }}
-      #     REGION: ${{ env.REGION }}
-      #     TAGFILENAME: config/cfn-tags.json
+      - name: Create or Update AWS Secret Variables for ${{ env.STACK_NAME }} account in ${{ env.REGION }} region
+        run: |
+          chmod +x scripts/cfn-create-update-secret.sh && scripts/cfn-create-update-secret.sh
+          echo "Here is secret variable ARN" && cat .env
+        env:
+          S3SECRETBUCKET: ${{ env.PRIVATES3BucketName }}
+          STACKNAME: ${{ env.STACK_NAME }}
+          ENV: ${{ env.ENV }}
+          REGION: ${{ env.REGION }}
+          TAGFILENAME: config/cfn-tags.json
 
       
-      # - name: Create secret cloudformation parameters for stack deployment
-      #   run: |
-      #     chmod +x scripts/cfn-secret-retrieve.sh && scripts/cfn-secret-retrieve.sh
-      #   env:
-      #     SECRET_VAR: ${{ env.STACK_NAME }}-AWSAccountID-${{ env.ENV }}
-      #     CFN_PARAM1: StagingAccountID
+      - name: Create secret cloudformation parameters for stack deployment
+        run: |
+          chmod +x scripts/cfn-secret-retrieve.sh && scripts/cfn-secret-retrieve.sh
+        env:
+          SECRET_VAR: ${{ env.STACK_NAME }}-AccountID-${{ env.ENV }}
+          CFN_PARAM1: StagingAccountID
 
 
      
