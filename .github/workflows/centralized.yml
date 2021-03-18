@@ -115,6 +115,7 @@ jobs:
           StackName=$STACK_NAME
           Env=$ENV
           RootStack=$SUBDOMAIN
+          TEST=$SUBDOMAIN
           EOF
 
 
